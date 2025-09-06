@@ -5,12 +5,15 @@ async function fetchData() {
     const response = await fetch(API_URL);
     if (!response.ok) throw new Error("Failed to fetch data");
     cryptoData = await response.json();
+
+    console.log("Fetched Data:", cryptoData); 
     renderTable(cryptoData);
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error:", error.message);
     document.getElementById("tableBody").innerHTML = <tr><td colspan="8">Error loading data</td></tr>;
   }
 }
+
 function renderTable(data) {
   const tableHead = document.getElementById("tableHead");
   const tableBody = document.getElementById("tableBody");
@@ -26,6 +29,7 @@ function renderTable(data) {
       <th>% Change (24h)</th>
     </tr>
   `;
+
   tableBody.innerHTML = data.map(coin => `
     <tr>
       <td><img src="${coin.image}" alt="${coin.name}"></td>
@@ -48,14 +52,17 @@ function searchData() {
   );
   renderTable(filteredData);
 }
+
 function resetData() {
   document.getElementById("searchInput").value = "";
   renderTable(cryptoData);
 }
+
 function sortByMarketCap() {
   const sorted = [...cryptoData].sort((a, b) => b.market_cap - a.market_cap);
   renderTable(sorted);
 }
+
 function sortByPercentage() {
   const sorted = [...cryptoData].sort((a, b) => b.market_cap_change_percentage_24h - a.market_cap_change_percentage_24h);
   renderTable(sorted);
